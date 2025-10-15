@@ -127,13 +127,19 @@ with col2:
     ))
 
 if guardar:
+    # Determinar el preu hora segons el centre
+    if "Aspros" in st.session_state.centre_gran:
+        preu_hora = 85.0
+    else:
+        preu_hora = 110.0
+
     registre = {
         "Centre gran": st.session_state.centre_gran,
         "Subcentre": st.session_state.subcentre if st.session_state.subcentre else "-",
         "Data": st.session_state.data_treball.strftime("%d/%m/%Y"),
         "Hores": st.session_state.hores_treballades,
-        "Preu hora (€)": 85.0,
-        "Import (€)": st.session_state.hores_treballades * 85.0,
+        "Preu hora (€)": preu_hora,
+        "Import (€)": st.session_state.hores_treballades * preu_hora,
     }
 
     # Crear o afegir al fitxer Excel
@@ -147,3 +153,4 @@ if guardar:
 
     st.success(f"✅ Dades desades correctament a '{EXCEL_PATH.name}'.")
     st.dataframe(df.sort_values(by='Data', ascending=False))
+
