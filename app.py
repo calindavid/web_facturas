@@ -19,7 +19,6 @@ CENTRES = {
 EXCEL_PATH = Path("dades_facturacio.xlsx")
 
 # --- Helpers -----------------------------------------------------------------
-
 def init_state_key(key: str, value):
     if key not in st.session_state:
         st.session_state[key] = value
@@ -29,11 +28,32 @@ init_state_key("subcentre", None)
 init_state_key("data_treball", datetime.date.today())
 init_state_key("hores_treballades", 0.0)
 
-# --- UI ----------------------------------------------------------------------
+# --- Mostrar dades guardades -------------------------------------------------
 st.title("📑 Selecció de centre i hores")
-st.write(
-    "Selecciona el **centre gran**, el **subcentre** (si aplica), la **data** i les **hores treballades**."
-)
+
+if EXCEL_PATH.exists():
+    df_exist = pd.read_excel(EXCEL_PATH)
+
+    # Convertir columna 'Data' a datetime para ordenar correctamente
+    try:
+        df_exist["Data"] = pd.to_datetime(df_exist["Data"], format="%d/%m/%Y")
+    except Exception:
+        pass  # por si ya está en formato datetime
+
+    df_exist = df_exist.sort_values(by="Data", ascending=False)
+
+    st.subheader("📋 Dades guardades")
+    st.dataframe(df_exist)
+
+    st.markdown("---")
+
+else:
+    st.info("ℹ️ Encara no hi ha dades guardades.")
+    df_exist = pd.DataFrame()
+
+# --- UI ----------------------------------------------------------------------
+st.subheader("Nova entrada de dades")
+st.write("Selecciona el **centre gran**, el **subcentre** (si aplica), la **data** i les **hores treballades**.")
 
 centre_options = list(CENTRES.keys())
 centre_gran: Optional[str] = st.radio(
@@ -43,7 +63,6 @@ centre_gran: Optional[str] = st.radio(
     if st.session_state.centre_gran in centre_options
     else 0,
 )
-
 st.session_state.centre_gran = centre_gran
 
 subcentres = CENTRES.get(centre_gran, [])
@@ -127,4 +146,4 @@ if guardar:
     df.to_excel(EXCEL_PATH, index=False)
 
     st.success(f"✅ Dades desades correctament a '{EXCEL_PATH.name}'.")
-    st.dataframe(df)
+    st.dataframe(df.sort_values(by='Data', ascending=False))
