@@ -136,7 +136,7 @@ if guardar:
     registre = {
         "Centre gran": st.session_state.centre_gran,
         "Subcentre": st.session_state.subcentre if st.session_state.subcentre else "-",
-        "Data": st.session_state.data_treball.strftime("%d/%m/%Y"),
+        "Data": st.session_state.data_treball.strftime("%d-%b."),
         "Hores": st.session_state.hores_treballades,
         "Preu hora (€)": preu_hora,
         "Import (€)": st.session_state.hores_treballades * preu_hora,
@@ -153,5 +153,6 @@ if guardar:
 
     st.success(f"✅ Dades desades correctament a '{EXCEL_PATH.name}'.")
     st.dataframe(df.sort_values(by='Data', ascending=False))
+
 
 
