@@ -8,12 +8,12 @@ st.set_page_config(page_title="Gestió de facturació – Centres", page_icon="�
 
 # --- Constants ---------------------------------------------------------------
 CENTRES = {
-    "Aspros (FUNDACIÓ PRIVADA ASPROS)": [
+    "Aspros": [
         "Centre Casa Nostra",
         "Centre Llars Urbanes",
         "Centre La Coma",
     ],
-    "Terraferma (Sar Residencial i assistencial sociosanitari SAU)": [],
+    "Terraferma": [],
 }
 
 EXCEL_PATH = Path("dades_facturacio.xlsx")
@@ -153,4 +153,5 @@ if guardar:
 
     st.success(f"✅ Dades desades correctament a '{EXCEL_PATH.name}'.")
     st.dataframe(df.sort_values(by='Data', ascending=False))
+
 
